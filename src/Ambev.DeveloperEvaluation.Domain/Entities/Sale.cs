@@ -1,4 +1,6 @@
+using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Domain.Validation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
@@ -18,7 +20,7 @@ public class Sale : BaseEntity
     /// Gets the date of sale
     /// It is a date that identify when the sale was made
     /// </summary>
-    public DateTime SaleDate { get; set; } = DateTime.Now;
+    public DateTime SaleDate { get; set; } = DateTime.UtcNow;
     
     /// <summary>
     /// Gets the identification of customer
@@ -49,4 +51,35 @@ public class Sale : BaseEntity
     /// It is a boolean value that identify the sale is active or inactive (cancelled)
     /// </summary>
     public bool Active { get; set; } = true;
+    
+    /// <summary>
+    /// Performs validation of the sale entity using the SaleValidator rules.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="ValidationResultDetail"/> containing:
+    /// - IsValid: Indicates whether all validation rules passed
+    /// - Errors: Collection of validation errors if any rules failed
+    /// </returns>
+    /// <remarks>
+    /// <listheader>The validation includes checking:</listheader>
+    /// <list type="bullet">Sale number is not empty</list>
+    /// <list type="bullet">Sale date is not empty</list>
+    /// <list type="bullet">Branch identification is not empty</list>
+    /// <list type="bullet">Branch name is not empty</list>
+    /// <list type="bullet">Customer is not empty</list>
+    /// <list type="bullet">Total amount is greater than zero</list>
+    /// <list type="bullet">Active is a valid value</list>
+    /// </remarks>
+    public ValidationResultDetail Validate()
+    {
+        var validator = new SaleValidator();
+        var result = validator.Validate(this);
+        return new ValidationResultDetail
+        {
+            IsValid = result.IsValid,
+            Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
+        };
+    }
+    
+    
 }

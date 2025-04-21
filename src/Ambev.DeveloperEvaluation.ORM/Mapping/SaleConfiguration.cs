@@ -14,7 +14,7 @@ public class SaleConfiguration : IEntityTypeConfiguration<Sale>
         builder.Property(s => s.Id).HasColumnType("uuid").HasDefaultValueSql("gen_random_uuid()");
         
         builder.Property(s => s.SaleNumber).IsRequired();
-        builder.Property(s => s.SaleDate).HasColumnType("timestamp").IsRequired();
+        builder.Property(s => s.SaleDate).HasColumnType("timestamp with time zone").IsRequired();
         builder.Property(s => s.CustomerId).HasColumnType("uuid").IsRequired();
         builder.Property(s => s.BranchId).IsRequired();
         builder.Property(s => s.BranchName).IsRequired();

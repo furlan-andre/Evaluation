@@ -65,7 +65,7 @@ public class Program
                     context.Database.Migrate();
                 }
             }
-
+            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
