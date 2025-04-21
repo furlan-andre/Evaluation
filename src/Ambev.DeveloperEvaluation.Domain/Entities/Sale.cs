@@ -24,7 +24,7 @@ public class Sale : BaseEntity
     /// Gets the identification of customer
     /// It is an identification code that identify the customer of the sale
     /// </summary>
-    public string CustomerId  { get; set; }
+    public Guid CustomerId  { get; set; }
     
     /// <summary>
     /// Gets the identification of branch
