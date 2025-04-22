@@ -55,7 +55,7 @@ public class Sale : BaseEntity
     /// <summary>
     /// Gets the representation of the items for a sale
     /// </summary>
-    public ICollection<SaleItem> Items { get; private set; } = new List<SaleItem>();
+    public ICollection<SaleItem> Items { get; set; } = new List<SaleItem>();
     
     /// <summary>
     /// Performs validation of the sale entity using the SaleValidator rules.
@@ -85,7 +85,7 @@ public class Sale : BaseEntity
             Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
         };
     }
-
+    
     public void CalculateTotalAmount()
     {
         foreach (var saleItem in Items)
