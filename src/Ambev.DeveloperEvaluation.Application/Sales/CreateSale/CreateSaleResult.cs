@@ -56,4 +56,6 @@ public class CreateSaleResult
     /// </summary>
     /// <value>A boolean value  that represents if the sale was valid.</value>
     public bool Active { get; set; }
+    
+    public IEnumerable<CreateSaleItemResult> Items { get; set; } = new List<CreateSaleItemResult>();
 }

@@ -57,4 +57,10 @@ public class UpdateSaleResult
     /// </summary>
     /// <value>A boolean value  that represents if the sale was valid.</value>
     public bool Active { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the items for the sale.
+    /// </summary>
+    /// <value>A UpdateSalItemResult value that represents the items of the sale.</value>
+    public IEnumerable<UpdateSaleItemResult> Items { get; set; } = new List<UpdateSaleItemResult>();
 }

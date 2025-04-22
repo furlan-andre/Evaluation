@@ -19,12 +19,13 @@ public class CreateSaleRequestValidator : AbstractValidator<CreateSaleRequest>
     /// </remarks>
     public CreateSaleRequestValidator()
     {
-        RuleFor(user => user.SaleNumber).NotEmpty();
-        RuleFor(user => user.SaleDate).NotEmpty();
-        RuleFor(user => user.BranchId).NotEmpty();
-        RuleFor(user => user.BranchName).NotEmpty();
-        RuleFor(user => user.CustomerId).NotEmpty();
-        RuleFor(user => user.TotalAmount).GreaterThan(0);
-        RuleFor(user => user.Active).NotEmpty();
+        RuleFor(sale => sale.SaleNumber).NotEmpty();
+        RuleFor(sale => sale.SaleDate).NotEmpty();
+        RuleFor(sale => sale.BranchId).NotEmpty();
+        RuleFor(sale => sale.BranchName).NotEmpty();
+        RuleFor(sale => sale.CustomerId).NotEmpty();
+        RuleFor(sale => sale.Active).NotNull();
+        RuleForEach(sale => sale.Items)
+            .SetValidator(new CreateSaleItemRequestValidator());
     }
 }

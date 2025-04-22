@@ -43,7 +43,8 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
             throw new ValidationException(validationResult.Errors);
 
         var sale = _mapper.Map<Sale>(command);
-
+        sale.CalculateTotalAmount();
+        
         var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
         _logger.LogInformation($"Created sale with id: {createdSale}", createdSale);
         

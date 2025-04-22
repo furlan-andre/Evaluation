@@ -1,5 +1,8 @@
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSales;
 
+/// <summary>
+/// Represents a request to create a new sale in the system.
+/// </summary>
 public class CreateSaleRequest
 {
     /// <summary>
@@ -36,4 +39,9 @@ public class CreateSaleRequest
     /// Gets or sets active to the sale.
     /// </summary>
     public bool Active { get; set; }
+    
+    /// <summary>
+    /// Gets or sets sale items
+    /// </summary>
+    public IEnumerable<CreateSaleItemRequest> Items { get; set; } = new List<CreateSaleItemRequest>(); 
 }

@@ -1,3 +1,4 @@
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
@@ -42,14 +43,32 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         if(storedSale is null)
             throw new KeyNotFoundException($"Sale with ID {request.Id} not found");
         
-        _mapper.Map(request, storedSale);
+        CancellationInformation(request, storedSale);
         
+        _mapper.Map(request, storedSale);
+        storedSale.CalculateTotalAmount();
+        
+
         var updatedSale = await _saleRepository.UpdateAsync(storedSale);
 
         var changedStatus = updatedSale.Active == true ? "Updated" : "Cancelled";
-        _logger.LogInformation($"{changedStatus} sale with data: {updatedSale}", updatedSale);
+        _logger.LogInformation($"{changedStatus} sale id: {updatedSale.Id} with data: {updatedSale}", updatedSale);
         
         var result = _mapper.Map<UpdateSaleResult>(updatedSale);
         return result;
+    }
+
+    private void CancellationInformation(UpdateSaleCommand request, Sale storedSale)
+    {
+        var updatedInactiveIds = request.Items.Where(x => x.Id != Guid.Empty && !x.Active)
+            .Select(x => x.Id).ToList();
+        
+        var storedItems = storedSale.Items.Where(x => x.Active).ToList();
+        var cancellingItems = storedItems.Where(x => (!x.Active && updatedInactiveIds.Contains(x.Id))).ToList();
+        
+        if (cancellingItems.Count == 0) return;
+        
+        foreach(var cancellingItem in cancellingItems)
+            _logger.LogInformation($"Cancelling sale item id:{cancellingItem.Id} with data {cancellingItem}", cancellingItem);
     }
 }

@@ -51,6 +51,11 @@ public class Sale : BaseEntity
     /// It is a boolean value that identify the sale is active or inactive (cancelled)
     /// </summary>
     public bool Active { get; set; } = true;
+  
+    /// <summary>
+    /// Gets the representation of the items for a sale
+    /// </summary>
+    public ICollection<SaleItem> Items { get; private set; } = new List<SaleItem>();
     
     /// <summary>
     /// Performs validation of the sale entity using the SaleValidator rules.
@@ -80,6 +85,22 @@ public class Sale : BaseEntity
             Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
         };
     }
-    
-    
+
+    public void CalculateTotalAmount()
+    {
+        foreach (var saleItem in Items)
+        {
+            var subtotal = (saleItem.Quantity * saleItem.UnitPrice);
+            var discountFactor = GetDiscountFactor(saleItem);
+            saleItem.Discount = discountFactor * subtotal;
+            saleItem.TotalAmount = subtotal - saleItem.Discount;
+        }
+        
+        TotalAmount = Items.Sum(o => o.TotalAmount);
+    }
+
+    public decimal GetDiscountFactor(SaleItem saleItem) =>
+        (saleItem.Quantity >= 10) ? (decimal) 0.2 :
+        (saleItem.Quantity >= 4 && saleItem.Quantity <= 9) ? (decimal)0.1 :
+        0;
 }

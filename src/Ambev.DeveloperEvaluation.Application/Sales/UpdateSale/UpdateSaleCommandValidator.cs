@@ -3,12 +3,12 @@ using FluentValidation;
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 
 /// <summary>
-/// Validator for CreateSaleCommand that defines validation rules for sale creation command.
+/// Validator for UpdateSaleCommand that defines validation rules for sale creation command.
 /// </summary>
 public class UpdateSaleCommandValidator : AbstractValidator<UpdateSaleCommand>
 {
     /// <summary>
-    /// Initializes a new instance of the CreateSaleCommandValidator with defined validation rules.
+    /// Initializes a new instance of the UpdateSaleCommandValidator with defined validation rules.
     /// </summary>
     /// <remarks>
     /// Validation rules include:
@@ -22,12 +22,13 @@ public class UpdateSaleCommandValidator : AbstractValidator<UpdateSaleCommand>
     /// </remarks>
     public UpdateSaleCommandValidator()
     {
-        RuleFor(user => user.SaleNumber).NotEmpty();
-        RuleFor(user => user.SaleDate).NotEmpty();
-        RuleFor(user => user.BranchId).NotEmpty();
-        RuleFor(user => user.BranchName).NotEmpty();
-        RuleFor(user => user.CustomerId).NotEmpty();
-        RuleFor(user => user.TotalAmount).GreaterThan(0);
-        RuleFor(user => user.Active).NotEmpty();
+        RuleFor(sale => sale.SaleNumber).NotEmpty();
+        RuleFor(sale => sale.SaleDate).NotEmpty();
+        RuleFor(sale => sale.BranchId).NotEmpty();
+        RuleFor(sale => sale.BranchName).NotEmpty();
+        RuleFor(sale => sale.CustomerId).NotEmpty();
+        RuleFor(sale => sale.Active).NotNull();
+        RuleForEach(sale => sale.Items)
+            .SetValidator(new UpdateSaleItemCommandValidator());
     }
 }

@@ -50,7 +50,10 @@ public class SaleRepository : ISaleRepository
     /// <returns>The user if found, null otherwise</returns>
     public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _context.Sales.FirstOrDefaultAsync(o=> o.Id == id, cancellationToken);
+        return await _context.Sales
+            .Where(s => s.Id == id)
+            .Include(sale => sale.Items)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     /// <summary>

@@ -44,4 +44,9 @@ public class UpdateSaleResponse
     /// The value for active of the sale
     /// </summary>
     public bool Active { get; set; }
+    
+    /// <summary>
+    /// The value for Items of the sale
+    /// </summary>
+    public IEnumerable<UpdateSaleItemResponse> Items { get; set; } = new List<UpdateSaleItemResponse>();
 }

@@ -35,5 +35,8 @@ public class SaleValidator : AbstractValidator<Sale>
         RuleFor(sale => sale.Active)
             .NotEmpty()
             .WithMessage("Active cannot be empty");
+        
+        RuleForEach(sale => sale.Items)
+            .SetValidator(new SaleItemValidator());
     }
 }

@@ -44,4 +44,9 @@ public class CreateSaleResponse
     /// The value for active of the sale
     /// </summary>
     public bool Active { get; set; }
+    
+    /// <summary>
+    /// The representation of Items for the sale
+    /// </summary>
+    public IEnumerable<CreateSaleItemResponse> Items { get; set; } = new List<CreateSaleItemResponse>();
 }

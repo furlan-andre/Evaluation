@@ -20,5 +20,10 @@ public class SaleConfiguration : IEntityTypeConfiguration<Sale>
         builder.Property(s => s.BranchName).IsRequired();
         builder.Property(s => s.TotalAmount).IsRequired().HasColumnType("decimal(18,2)");
         builder.Property(s => s.Active).IsRequired();
+
+        builder.HasMany<SaleItem>(s => s.Items)
+            .WithOne(s => s.Sale)
+            .HasForeignKey(s => s.SaleId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
