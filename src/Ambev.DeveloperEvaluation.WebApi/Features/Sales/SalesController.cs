@@ -1,10 +1,12 @@
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSales;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSales;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSales;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSales;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +53,7 @@ public class SalesController : BaseController
         var command = _mapper.Map<CreateSaleCommand>(request);
         var response = await _mediator.Send(command, cancellationToken);
 
-        return Created(string.Empty, new ApiResponseWithData<CreateSaleResponse>
+        return Created(nameof(GetSale), new ApiResponseWithData<CreateSaleResponse>
         {
             Success = true,
             Message = "Sale created successfully",
@@ -99,7 +101,7 @@ public class SalesController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteUser([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteSale([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var request = new DeleteSaleRequest { Id = id };
         var validator = new DeleteSaleRequestValidator();
@@ -116,5 +118,29 @@ public class SalesController : BaseController
             Success = true,
             Message = "Sale deleted successfully"
         });
+    }
+    
+    /// <summary>
+    /// Update a existing sale
+    /// </summary>
+    /// <param name="request">The sale update request</param>
+    /// <returns>The updated sale details</returns>
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateSale([FromRoute] Guid id, [FromBody] UpdateSaleRequest request)
+    {
+        var validator = new UpdateSaleRequestValidator();
+        var validationResult = await validator.ValidateAsync(request);
+
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+        
+        var command = _mapper.Map<UpdateSaleCommand>(request);
+        command.Id = id;
+        
+        var response = await _mediator.Send(command);
+        return Ok(response);
     }
 }
