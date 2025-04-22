@@ -96,7 +96,7 @@ public class Sale : BaseEntity
             saleItem.TotalAmount = subtotal - saleItem.Discount;
         }
         
-        TotalAmount = Items.Sum(o => o.TotalAmount);
+        TotalAmount = Items.Sum(i => i.Active ? i.TotalAmount: 0);
     }
 
     public decimal GetDiscountFactor(SaleItem saleItem) =>
