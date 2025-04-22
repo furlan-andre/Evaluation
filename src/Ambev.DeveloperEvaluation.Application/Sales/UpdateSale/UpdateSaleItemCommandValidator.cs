@@ -20,7 +20,7 @@ public class UpdateSaleItemCommandValidator : AbstractValidator<UpdateSaleItemCo
     public UpdateSaleItemCommandValidator()
     {
         RuleFor(sale => sale.ProductId).NotEmpty();
-        RuleFor(sale => sale.Quantity).NotEmpty();
+        RuleFor(sale => sale.Quantity).NotEmpty().LessThanOrEqualTo(20);
         RuleFor(sale => sale.UnitPrice).NotEmpty();
         RuleFor(sale => sale.Active).NotNull();
     }

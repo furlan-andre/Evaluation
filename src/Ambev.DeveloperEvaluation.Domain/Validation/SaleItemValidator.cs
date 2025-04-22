@@ -17,7 +17,7 @@ public class SaleItemValidator : AbstractValidator<SaleItem>
         
         RuleFor(x => x.Quantity)
             .NotEmpty().WithMessage("Quantity cannot be empty")
-            .GreaterThan(20).WithMessage("Quantity cannot be greater than 20");
+            .LessThanOrEqualTo(20).WithMessage("Quantity cannot be greater than 20");
 
         RuleFor(x => x.UnitPrice)
             .NotEmpty().WithMessage("Unit price cannot be empty");
